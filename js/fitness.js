@@ -120,7 +120,7 @@ function getContactList() {
 			try{
 				that.endPullupToRefresh(moreFlag);
 			}catch(error) {
-				console.log("end error");
+//				console.log("end error");
 			}
 			loadingFlag = false;
 
@@ -181,10 +181,10 @@ function updateContactList() {
 // 将信息装载到视图，若无本地信息则发起网络请求
 function mountStorage(data) {
 	if(!data) {
-		console.log("no local");
+//		console.log("no local");
 		getContactList();
 	} else {
-		console.log("local");
+//		console.log("local");
 		var dataArr = data.split("+");
 		var convertData = dataArr.map(function(item, index, arr) {
 			return JSON.parse(item);

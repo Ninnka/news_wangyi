@@ -70,16 +70,19 @@ mui.plusReady(function() {
 		});
 	});
 	var localData = localStorage.getItem('carData');
-//	console.log(localStorage.getItem('carId'));
+//	console.log(localStorage.getItem('carData'));
 	if(localData) {
 		localData = localData.split('+');
 		localData.reverse();
+//		console.log(localData[0]);
 		var ul = document.querySelector('.list');
 		for(var i = 0; i < localData.length; i++) {
+//			console.log(tempDataObj);
 			var tempDataObj = JSON.parse(localData[i]);
 			addItem(tempDataObj, ul,false);
 		}
-	}else{
+	}
+	else{
 		getData(0, false);
 	}
 });
@@ -146,12 +149,12 @@ function getData(startIndex, isDownfresh) {
 					requestedIds.push(arrobj[i].docid);
 					if(eid) {
 						if(eid.indexOf(arrobj[i].docid) === -1) {
-							exitId += arrobj[i].docid;
-							localStr += JSON.stringify(tempObj);
-							if(i !== arrobj.length - 1) {
-								localStr += '+';
-								exitId += '+';
-							}
+//							exitId += arrobj[i].docid;
+//							localStr += JSON.stringify(tempObj);
+//							if(i !== arrobj.length - 1) {
+//								localStr += '+';
+//								exitId += '+';
+//							}
 							addItem(arrobj[i], ul,true);
 						}
 					} else {

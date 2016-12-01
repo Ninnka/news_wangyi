@@ -70,7 +70,7 @@ function upfresh() {
 				if(requestedIds.indexOf(arrobj[i].docid) === -1){
 					requestedIds.push(arrobj[i].docid);
 					if(eid) {
-						console.log(eid.indexOf(arrobj[i].docid));
+//						console.log(eid.indexOf(arrobj[i].docid));
 						if(eid.indexOf(arrobj[i].docid) === -1) {
 							addItem(arrobj[i], ul,false);
 						}
@@ -117,12 +117,12 @@ function getData(startIndex, isDownfresh) {
 					requestedIds.push(arrobj[i].docid);
 					if(eid) {
 						if(eid.indexOf(arrobj[i].docid) === -1) {
-							exitId += arrobj[i].docid;
-							localStr += JSON.stringify(tempObj);
-							if(i !== arrobj.length - 1) {
-								localStr += '+';
-								exitId += '+';
-							}
+//							exitId += arrobj[i].docid;
+//							localStr += JSON.stringify(tempObj);
+//							if(i !== arrobj.length - 1) {
+//								localStr += '+';
+//								exitId += '+';
+//							}
 							addItem(arrobj[i], ul,true);
 						}
 					} else {

@@ -1,5 +1,4 @@
 var subPages = [
-	"template/home.html",
 	"template/fitness.html",
 	"template/economic.html",
 	"template/car.html",
@@ -8,7 +7,8 @@ var subPages = [
 	"template/furnishing.html",
 	"template/military.html",
 	"template/movie.html",
-	"template/entertamain.html"
+	"template/entertamain.html",
+	"template/home.html"
 ];
 var subPagesStyle = {
 	top: "36px",
@@ -22,13 +22,14 @@ function addSubPages() {
 
 	var self = plus.webview.currentWebview();
 
-	for(var i = 0; i < subPages.length; i++) {
+	for(var i = 0; i < 1; i++) {
 		var tempPage = plus.webview.create(subPages[i], subPages[i], subPagesStyle);
 		if(i > 0) {
 			tempPage.hide();
 		}
 		self.append(tempPage);
 	}
+
 }
 
 // 顶部选项卡点击事件
@@ -39,6 +40,10 @@ function addScrollTabItemClickListener() {
 		if(target_tab_href === tab_active) {
 			return;
 		} else {
+			if(plus.webview.getWebviewById(target_tab_href) === null){
+				var tempPage = plus.webview.create(target_tab_href, target_tab_href, subPagesStyle);
+				plus.webview.currentWebview().append(tempPage);
+			}
 			plus.webview.hide(tab_active);
 			tab_active = target_tab_href;
 			plus.webview.show(tab_active);
