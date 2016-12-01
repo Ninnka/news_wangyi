@@ -1,10 +1,257 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
-		<meta charset="UTF-8">
-		<title></title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+			.ul {
+				width: 100%;
+				margin-top: 0 !important;
+				padding-top: 10px !important;
+				background: gainsboro !important;
+				padding-bottom: 10px !important;
+			}
+			
+			li {
+				display: block;
+				width: 93%;
+				margin: 0 auto !important;
+				background: whitesmoke !important;
+				margin-bottom: 10px !important;
+			}
+			
+			.img {
+				/*border-top-left-radius: 5px;
+    	border-top-right-radius: 5px;*/
+				width: 100%;
+				height: 150px;
+			}
+			
+			.div {
+				margin: 0 auto;
+				width: 100%;
+				padding-right: 20px;
+				padding-left: 20px;
+			}
+			
+			.h5 {
+				color: black;
+				font-size: 15px;
+				line-height: 18px;
+				/*text-align: justify;*/
+			}
+			
+			.p {
+				font-size: 10px;
+				line-height: 13px;
+			}
+			
+			.browse {
+				color: deepskyblue;
+				float: left;
+				height: 20px;
+				font-size: 13px;
+				line-height: 13px;
+			}
+			
+			.day {
+				float: right;
+				color: black;
+				font-size: 10px;
+				line-height: 13px;
+				height: 20px;
+			}
+			
+			.float-btn {
+				border-radius: 22px;
+				width: 44px;
+				height: 44px;
+				position: fixed;
+				right: 20px;
+				bottom: 20px;
+				z-index: 1000;
+			}
+		</style>
+
 	</head>
+
 	<body>
-		furnishing
+		<div id="refresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<!--数据列表-->
+				<ul class="mui-table-view ul mui-table-view-chevron" style="background-color: white;">
+
+				</ul>
+			</div>
+		</div>
+		<img src="img/btn.jpg" class="float-btn" />
+		<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init({
+				pullRefresh: {
+					container: "#refresh",
+					up: {
+						height: 50,
+						auto: false,
+						contentrefresh: "正在加载...",
+						contentnomore: '别拉了，没了',
+						callback: pullupfresh
+					},
+					down: {
+						height: 50,
+						auto: false,
+						contentdown: "下拉可以刷新",
+						contentover: "再不放开我报警了",
+						contentrefresh: "正在刷新...",
+						callback: pulldownfresh
+					}
+				}
+			});
+			pullupfresh();
+			var j = 0; //上拉加载总数
+			//下拉刷新函数
+			function pulldownfresh() {
+				var lis = document.getElementsByTagName("li");
+				var lisid = [];
+				for(var i = 0; i > 10; i++) {
+					lisid[i] = lis[i].id;
+				}
+				console.log(lisid);
+				mui.plusReady(function() {
+					var ul = document.body.querySelector('.mui-table-view');
+					mui.ajax('http://c.m.163.com/nc/article/list/T1348654105308/0-10.html', {
+						dataType: 'json',
+						type: 'get',
+						success: function(data) {
+							var lis = document.getElementsByTagName("li");
+							var obj = data["T1348654105308"];
+							for(var i = 9; i >= 0; i--) {
+								var li = document.createElement('li');
+								var div = document.createElement("div");
+								var img = document.createElement("img");
+								var h5 = document.createElement("h5");
+								var p = document.createElement("p");
+								var day = document.createElement("div");
+								var browse = document.createElement("div");
+								li.id = obj[i].docid;
+								console.log(li.id);
+								console.log("下拉");
+								li.url = obj[i].url; /*详情url*/
+								li.title = obj[i].title; /*详情标题*/
+								li.className = 'mui-card';
+								img.src = obj[i].imgsrc;
+								img.className = "img";
+								div.className = "div";
+								h5.className = "h5";
+								p.className = "p";
+								day.className = "day";
+								browse.className = "browse";
+								h5.innerHTML = obj[i].title;
+								p.innerHTML = obj[i].digest + "<hr/>";
+								browse.innerHTML = "点击量:" + obj[i].priority;
+								day.innerHTML = obj[i].lmodify;
+
+								div.appendChild(h5);
+								div.appendChild(p);
+								div.appendChild(browse);
+								div.appendChild(day);
+								li.appendChild(img);
+								li.appendChild(div);
+								if(obj[i].id == lisid[i]) {
+									console.log("没有新的数据");
+								} else {
+									console.log("有新的数据");
+									ul.insertBefore(li, ul.firstChild);
+								}
+							}
+						}
+					});
+				});
+				mui('#refresh').pullRefresh().endPulldownToRefresh();
+			}
+			/////上拉加载函数/////
+			function pullupfresh() {
+				var that = this;
+				var ul = document.body.querySelector('.mui-table-view');
+				mui.plusReady(function() {
+					mui.ajax('http://c.m.163.com/nc/article/list/T1348654105308/' + j + '-10.html', {
+						dataType: 'json',
+						type: 'get',
+						success: function(data) {
+							var obj = data["T1348654105308"];
+							console.log(obj.length);
+							for(var i = 0; i < 10; i++) {
+								var li = document.createElement('li');
+								var div = document.createElement("div");
+								var img = document.createElement("img");
+								var h5 = document.createElement("h5");
+								var p = document.createElement("p");
+								var day = document.createElement("div");
+								var browse = document.createElement("div");
+								li.id = obj[i].docid;
+								console.log(li.id);
+								console.log("上拉");
+								li.url = obj[i].url; /*详情url*/
+								li.title = obj[i].title; /*详情标题*/
+								li.className = 'mui-card';
+								img.src = obj[i].imgsrc;
+								img.className = "img";
+								div.className = "div";
+								h5.className = "h5";
+								p.className = "p";
+								day.className = "day";
+								browse.className = "browse";
+								h5.innerHTML = obj[i].title;
+								p.innerHTML = obj[i].digest + "<hr/>";
+								browse.innerHTML = "点击量:" + obj[i].priority;
+								day.innerHTML = obj[i].lmodify;
+								console.log(li.url);
+								console.log(i);
+								div.appendChild(h5);
+								div.appendChild(p);
+								div.appendChild(browse);
+								div.appendChild(day);
+								li.appendChild(img);
+								li.appendChild(div);
+								++j;
+								ul.appendChild(li);
+							}
+						}
+					});
+					if(j >= 100) {
+						that.endPullupToRefresh(true);
+					} else {
+						that.endPullupToRefresh(false);
+					}
+				});
+
+			}
+			//////////////////回到顶部//////////////////
+			mui('.mui-content').on('tap', 'li', function() {
+				mui.openWindow({
+					url: "subpage.html",
+					id: "furnishing_detail",
+					show: {
+						aniShow: 'slide-in-right'
+					},
+					extras: {
+						detailUrl: this.url,
+						detailTitle: this.title
+					},
+				});
+			});
+			/////监听点击事件/////
+			var btn = document.querySelector(".float-btn");
+			btn.addEventListener("tap", function() {
+				//内容区滚动到顶部
+				mui('#refresh').pullRefresh().scrollTo(0,0,1000);
+			});
+		</script>
+
 	</body>
+
 </html>
