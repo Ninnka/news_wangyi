@@ -36,11 +36,12 @@ function addSubPages() {
 function addScrollTabItemClickListener() {
 	var tab_active = subPages[0];
 	mui(".mui-scroll").on("tap", "a", function(e) {
+		console.log("a length: "+this.offsetWidth);
 		var target_tab_href = this.getAttribute("href");
 		if(target_tab_href === tab_active) {
 			return;
 		} else {
-			if(plus.webview.getWebviewById(target_tab_href) === null){
+			if(plus.webview.getWebviewById(target_tab_href) === null) {
 				var tempPage = plus.webview.create(target_tab_href, target_tab_href, subPagesStyle);
 				plus.webview.currentWebview().append(tempPage);
 			}
@@ -56,13 +57,36 @@ mui.plusReady(function() {
 	mui.init();
 	addSubPages();
 	addScrollTabItemClickListener();
-	mui('.mui-scroll-wrapper').scroll({
-		scrollY: false, //是否竖向滚动
-		scrollX: true, //是否横向滚动
-		startX: 0, //初始化时滚动至x
-		startY: 0, //初始化时滚动至y
-		indicators: false, //是否显示滚动条
-		bounce: false, //是否启用回弹
-	});
+
+//		mui(".mui-scroll-wrapper").scroll({
+//			scrollY: false,
+//			scrollX: false,
+//			startX: 300,
+//			startY: 0,
+//			indicators: false,
+//			bounce: true
+//		});
+
+	// test
+	// 窗口宽度
+//	console.log("window width: "+document.body.clientWidth);
+
+	var msw = mui("#nav_scroll_wrapper");
+	var mswDom = msw[0];
+
+	var ms = mui(".mui-scroll");
+	var msDom = ms[0];
+	// 滚动条宽度
+//	console.log("msDom length: "+msDom.offsetWidth);
+
+//	msw.scroll().scrollTo(-300, 0, 1000);
+
+	var ssm = msDom.style.transform.match(/translate3d\((.+),/);
+
+	var ssma = ssm[1].split(", ");
+	// x偏移距离
+//	console.log(parseInt(ssma[0], 10));
+
+
 
 });

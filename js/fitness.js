@@ -84,7 +84,6 @@ function getContactList() {
 	var currApi = api_prefix + currentCountMount + "-" + limit + api_after;
 	var that = this;
 
-
 	mui.ajax(currApi, {
 		dataType: 'json',
 		type: 'get',
@@ -104,7 +103,7 @@ function getContactList() {
 					currentItemFirst = convertData[i];
 				}
 				if(repeatArr.length !== 0 && repeatArr.indexOf(convertData[i].docid) !== -1) {
-					console.log("i: "+i);
+					console.log("i: " + i);
 					continue;
 				} else {
 					var card_wrapper = createCardWrapper(convertData[i]);
@@ -117,13 +116,10 @@ function getContactList() {
 			moreFlag = currentCountMount >= 100 ? true : false;
 
 			// 强制结束，捕捉错误
-			try{
+			try {
 				that.endPullupToRefresh(moreFlag);
-			}catch(error) {
-//				console.log("end error");
-			}
+			} catch(error) {}
 			loadingFlag = false;
-
 		}
 	})
 }
@@ -163,15 +159,15 @@ function updateContactList() {
 			});
 
 			var cards = scroll_content_wrapper.querySelectorAll(".mui-card");
-						console.log("current cards.length: " + cards.length);
+			console.log("current cards.length: " + cards.length);
 			repeatArr.length = 0;
 			for(var j = cards.length - 1; j >= cards.length - newData.length; j--) {
 
 				var lastcard = cards[j];
 				repeatArr.push(j.id);
 			}
-						console.log("newData.length: " + newData.length);
-						console.log("repeatArr.length: "+repeatArr.length);
+			console.log("newData.length: " + newData.length);
+			console.log("repeatArr.length: " + repeatArr.length);
 			//			currentCountMount = currentCountMount + newData.length;
 			mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
 		}
@@ -181,10 +177,10 @@ function updateContactList() {
 // 将信息装载到视图，若无本地信息则发起网络请求
 function mountStorage(data) {
 	if(!data) {
-//		console.log("no local");
-		getContactList();
+		console.log("no local");
+		//		getContactList();
 	} else {
-//		console.log("local");
+		console.log("local");
 		var dataArr = data.split("+");
 		var convertData = dataArr.map(function(item, index, arr) {
 			return JSON.parse(item);
@@ -212,15 +208,16 @@ function storageToLocal(data) {
 	});
 
 	localinfo = localinfo.join("+");
-	plus.storage.setItem("fitness", localinfo);
+	window.localStorage.setItem("fitness", localinfo);
 }
 
 // 从本地读取信息
 function getStorageFromLocal() {
-	var localInfo = plus.storage.getItem("fitness");
+	var localInfo = window.localStorage.getItem("fitness");
 	return localInfo;
 }
 
+window.localStorage.setItem("a", 10);
 // 准备完毕
 mui.plusReady(function() {
 	document.querySelector('.float-btn').addEventListener('tap', function() {
@@ -237,6 +234,5 @@ mui.plusReady(function() {
 			}
 		});
 	});
-
 	mountStorage(getStorageFromLocal());
 });
