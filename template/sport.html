@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<title></title>
+		<style type="text/css">
+			.mui-table-view-cell .mui-media {
+				width: 110px;
+				height: 90px;
+				margin-right: 10px;
+			}
+
+			.mui-table-view-cell h6 {
+				width: 115%;
+				margin: 20px 0 0 0;
+				text-align: right;
+			}
+
+			.mui-table-view-cell h5 {
+				width: 117%;
+				color: black;
+			}
+
+			.mui-table-view-cell h4 {
+				width: 117%;
+				overflow: hidden;
+			}
+
+			.mui-card-content img {
+				width: 100%;
+			}
+
+			.mui-table-view-cell .img3 {
+				width: 31%;
+				height: 90px;
+				margin: 3% 1% 0;
+			}
+			.float-btn {
+				border-radius: 22px;
+				width: 44px;
+				height: 44px;
+				position: fixed;
+				right: 20px;
+				bottom: 20px;
+				z-index: 1000;
+			}
+		</style>
+	</head>
+
+	<body>
+		<img src="../icon/top.jpg" alt="" class="float-btn"/>
+		<div id="refreshContainer" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div class="mui-card">
+					<!--页眉，放置标题-->
+					<div class="mui-card-header"></div>
+					<!--内容区-->
+					<div class="mui-card-content">
+						<img src="" alt="" />
+					</div>
+				</div>
+				<!--数据列表-->
+				<ul class="mui-table-view mui-table-view-chevron mui-content">
+
+				</ul>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/downGetAjax.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/spo_UGA.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/re_top.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var div = document.querySelector(".mui-card");
+		var ul = document.querySelector(".mui-table-view");
+		var absHeader = document.querySelector(".mui-card-header");
+		var absContent = document.querySelector(".mui-card-content");
+		var img = document.querySelector(".mui-card-content img");
+		var count = 0;
+		mui.init({
+			pullRefresh: {
+				container: "#refreshContainer", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+				down: {
+					height: 50, //可选,默认50.触发下拉刷新拖动距离,
+					auto: false, //可选,默认false.自动下拉刷新一次
+					contentdown: "下拉可以刷新", //可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+					contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+					contentrefresh: "正在刷新...", //可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+					callback: downFresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+				},
+				up: {
+					height: 50, //可选.默认50.触发上拉加载拖动距离
+					auto: true, //可选,默认false.自动上拉加载一次
+					contentrefresh: "正在加载...", //可选，正在加载状态时，上拉加载控件上显示的标题内容
+					contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
+					callback: upFresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+				}
+			}
+		});
+		//下拉刷新
+		function downFresh() {
+			mui.ajax('http://c.m.163.com/nc/article/list/T1348649079062/0-10.html', {
+				dataType: 'json',
+				type: 'get',
+				success: function(data) {
+					var data = data["T1348649079062"];
+					absHeader.innerHTML = data[0]['ads'][0]['title'];
+					absContent.url = 'http://sports.163.com/photoview/'+data[0]['ads'][0]['url'].replace('|',"/")+'.html';
+					absContent.title = data[0]['ads'][0]['title'];
+					img.src = data[0]['ads'][0]['imgsrc'];
+					mui.each(data, function(index, item) {
+						downGet(item);
+					});
+					mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+				}
+			});
+		}
+		//上拉加载
+		function upFresh() {
+			var that = this;
+			mui.ajax('http://c.m.163.com/nc/article/list/T1348649079062/' + count + '-10.html', {
+				dataType: 'json',
+				type: 'get',
+				success: function(data) {
+					var data = data["T1348649079062"];
+					absHeader.innerHTML = data[0]['ads'][0]['title'];
+					absContent.url = 'http://sports.163.com/photoview/'+data[0]['ads'][0]['url'].replace('|',"/")+'.html';
+					absContent.title = data[0]['ads'][0]['title'];
+					img.src = data[0]['ads'][0]['imgsrc'];
+					mui.each(data, function(index, item) {
+						upGet(item);
+					});
+					count += 10;
+					that.endPullupToRefresh(false);
+				}
+			});
+		}
+		//跳转
+		function skip(){
+			mui.openWindow({
+				url: "subpage.html",
+				id: 'sport1',
+				show: {
+					aniShow: 'slide-in-right'
+				},
+				extras: {
+					detailUrl: this.url,
+					detailTitle: this.title
+				}
+			})
+		}
+		mui('.mui-content').on('tap','li',skip);
+		mui('.mui-content').on('tap','.mui-card-content',skip);
+	</script>
+
+</html>

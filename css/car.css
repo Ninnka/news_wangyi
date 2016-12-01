@@ -1,0 +1,72 @@
+*{
+	padding: 0;
+	margin: 0;
+}
+.nav {
+	padding: 3px 0;
+	display: flex;
+	justify-content: space-around;
+	box-shadow: 0 0 10px -5px #a0a0a0;
+	font-size: 12px;
+}
+
+.nav li {
+	padding-top: 30px;
+	list-style: none;
+}
+
+.nav li:nth-child(1) {
+	background: url('http://img2.cache.netease.com/m/newsapp/qichedaquan.png') no-repeat center top;
+	background-size: 30px 30px;
+}
+
+.nav li:nth-child(2) {
+	background: url('http://img2.cache.netease.com/m/newsapp/zhidemai.png') no-repeat center top;
+	background-size: 30px 30px;
+}
+
+.nav li:nth-child(3) {
+	background: url('http://cms-bucket.nosdn.127.net/896934df6e7a411a9e908107d029e2da20160914141840.png') no-repeat center top;
+	background-size: 30px 30px;
+}
+
+#refreshContainer {
+	margin-top: 60px;
+}
+
+.list {
+	margin: 40px auto;
+	width: 90%;
+}
+
+.list .list-item {
+	margin-bottom: 15px;
+	width: 100%;
+	list-style: none;
+	font-size: 12px;
+	box-shadow: 0 0 5px 0px #909090;
+}
+
+.list-item>img {
+	width: 100%;
+	height: 180px;
+}
+.list-item div,.list-item p{
+	padding: 0;
+	margin: 0;
+	color: #000;
+}
+
+.list-item .time,.list-item>p{
+	color: #909090;
+}
+
+.float-btn {
+	position: fixed;
+	right: 20px;
+	bottom: 20px;
+	z-index: 1000;
+	border-radius: 22px;
+	width: 44px;
+	height: 44px;	
+}

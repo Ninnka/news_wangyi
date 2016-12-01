@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav white">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title"></h1>
+		</header>
+
+	</body>
+	<script src="../js/mui.js"></script>
+	<script type="text/javascript">
+
+		mui.plusReady(function() {
+			// 取页面传值
+			var detailTitle = plus.webview.currentWebview().detailTitle;
+			document.querySelector(".mui-title").innerText = detailTitle;
+
+			var self = plus.webview.currentWebview();
+			var urls = self.detailUrl;
+			var tag1 = urls.lastIndexOf("/");
+			var tag2 = urls.lastIndexOf(".");
+			var detailId = urls.slice(tag1 + 1, tag2);
+			console.log(detailId);
+			var styles = {
+				top: "45px"
+			};
+			var sub = plus.webview.create(urls, detailId, styles, {});
+			plus.webview.currentWebview().append(sub);
+
+		});
+	</script>
+
+</html>

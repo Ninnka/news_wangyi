@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+			}
+
+			.imgs {
+				width: 80px;
+				height: 100px;
+				float: left;
+				margin-left: 10px;
+				margin-top: 10px;
+			}
+
+			ul {
+				margin-top: 0 !important;
+				overflow: hidden;
+			}
+
+			li {
+				height: 120px;
+				border: 1px solid gainsboro;
+				position: relative;
+			}
+			/*.contain{
+    		display: inline-block;
+    		float: left;
+    		height: 60px;
+    		margin-top: 0 !important;
+    		margin-left: 150px !important;
+    		background: red;
+    	}*/
+
+			.h5 {
+				display: inline-block;
+				margin-top: 10px;
+				margin-left: 10px;
+				font-size: 13px;
+				color: black;
+				/*font-weight: bolder;*/
+			}
+
+			.span {
+				display: inline-block;
+				font-size: 12px;
+				line-height: 13px;
+				position: absolute;
+				left: 100px;
+				top: 30px;
+				color: grey;
+			}
+
+			.p {
+				position: absolute;
+				right: 10px;
+				bottom: 0px;
+				color: black;
+			}
+
+			.float-btn {
+				border-radius: 22px;
+				width: 44px;
+				height: 44px;
+				position: fixed;
+				right: 20px;
+				bottom: 20px;
+				z-index: 1000;
+			}
+		</style>
+	</head>
+
+	<body style="background-color: gainsboro;">
+
+		<!--<header class="mui-bar mui-bar-nav white">
+			<h1 class="mui-title" style="font-size: 20px;">网易影视</h1>
+		</header>-->
+		<img class="float-btn" src="../icon/top.jpg" />
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+
+				<!--数据列表-->
+				<ul class="mui-table-view mui-table-view-chevron">
+					<!--<li class="tableView-cell">-->
+
+					<!--</li>-->
+				</ul>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		data();
+		mui.plusReady(function() {
+			mui.init({
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						//					auto: true,
+						contentover: "释放立即刷新",
+						contentrefresh: '正在刷新...',
+						callback: data
+					},
+					up: {
+						height: 50,
+						auto: true,
+						contentrefresh: '正在向上加载...',
+						contentnomore: '没有更多数据了',
+						callback: data,
+						//
+					}
+				}
+			});
+
+		});
+
+		function data() {
+			setTimeout(function() {
+				var table = document.body.querySelector('.mui-table-view');
+				mui.plusReady(function() {
+					mui.ajax("http://c.m.163.com/nc/article/list/T1348648650048/0-20.html", {
+						dataType: 'json',
+						type: 'get',
+
+						success: function(data) {
+
+							//			console.log(img);
+							var arr = data["T1348648650048"];
+							//			console.log(arr);
+							//          console.log(arr[0].imgsrc);
+
+							mui.each(arr, function(index, obj) {
+								var li = document.createElement("li");
+
+								li.url = obj.url_3w;
+								li.title = obj.title;
+
+								var imgs = document.createElement("img");
+								var div = document.createElement("div");
+								var h5 = document.createElement("h5");
+								var p = document.createElement("p");
+								var span = document.createElement("span");
+
+								//     	li.className = "mui-card";
+								imgs.src = obj.imgsrc;
+//								console.log(obj.imgsrc);
+								li.appendChild(imgs);
+								imgs.className = "imgs";
+
+								//      div.className = "contain";
+								//      li.appendChild(div);
+
+								h5.innerHTML = obj.title;
+								li.appendChild(h5);
+								h5.className = "h5";
+
+								span.innerHTML = obj.digest + "...";
+								li.appendChild(span);
+								span.className = "span";
+
+								//      p.innerHTML = "评论："+obj.replyCount;
+								p.innerHTML = obj.lmodify;
+								li.appendChild(p);
+								p.className = "p";
+
+								table.appendChild(li);
+							});
+						}
+					});
+				});
+				mui('#pullrefresh').pullRefresh().endPulldownToRefresh(true);
+
+				mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+			}, 1500);
+
+		};
+
+		//页面跳转
+		mui('.mui-content').on('tap', 'li', function() {
+			mui.openWindow({
+				url: "subpage.html",
+				id: "movie",
+				show: {
+					aniShow: "slide-in-right"
+				},
+				extras: {
+					detailUrl: this.url,
+					detailTitle: this.title
+				},
+
+			});
+
+		});
+
+		var btn = document.body.querySelector(".float-btn");
+		btn.addEventListener('tap', function() {
+			mui('.mui-scroll-wrapper').scroll().scrollTo(0, 0, 200); //200毫秒滚动到顶
+		});
+	</script>
+
+	</body>
+
+</html>
