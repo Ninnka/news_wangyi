@@ -82,7 +82,7 @@
 		var absHeader = document.querySelector(".mui-card-header");
 		var absContent = document.querySelector(".mui-card-content");
 		var img = document.querySelector(".mui-card-content img");
-		var count = 0;
+		var count = 10;
 		var dataArr = [];
 		mui.plusReady(function() {
 			var eco_data = localStorage.getItem("spo_storage");
@@ -297,7 +297,6 @@
 						upGet(item);
 					});
 					count += 10;
-
 					that.endPullupToRefresh(false);
 					//					var b = data.map(function(x){ return JSON.stringify(x)});
 					//					localStorage.setItem("spo_storage",b.join('+++'));
@@ -307,7 +306,7 @@
 		//跳转
 		function skip() {
 			mui.openWindow({
-				url: "sport1.html",
+				url: "subpage.html",
 				id: 'sport1',
 				show: {
 					aniShow: 'slide-in-right'

@@ -82,9 +82,9 @@ mui.plusReady(function() {
 			addItem(tempDataObj, ul,false);
 		}
 	}
-//	else{
-//		getData(0, false);
-//	} 
+	else{
+		getData(0, false);
+	}
 });
 //上拉加载
 function upfresh() {
@@ -108,7 +108,7 @@ function upfresh() {
 						}
 					} else {
 						addItem(arrobj[i], ul,false);
-						
+
 					}
 				}
 			}
@@ -157,19 +157,19 @@ function getData(startIndex, isDownfresh) {
 //							}
 							addItem(arrobj[i], ul,true);
 						}
-					} else {	
+					} else {
 						exitId += arrobj[i].docid;
 						localStr += JSON.stringify(tempObj);
 						if(i !== arrobj.length - 1) {
 							localStr += '+';
 							exitId += '+';
 						}
-						addItem(arrobj[i], ul,true); 
+						addItem(arrobj[i], ul,true);
 					}
 				}
-			} 
+			}
 			if(localStr !== '' && exitId !== ''){
-				localStorage.setItem('carData', localStr);  
+				localStorage.setItem('carData', localStr);
 				localStorage.setItem('carId', exitId);
 			}else{
 				mui.toast('这已经是最新的信息了！');

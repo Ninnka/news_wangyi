@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+			}
+
+			.mui-slider {
+				margin-bottom: 0px;
+			}
+
+			.img {
+				width: 100%;
+				height: 250px;
+			}
+
+			ul {
+				width: 100%;
+				background: pink;
+				/*margin-top: 250px !important;*/
+			}
+
+			li {
+				height: 120px;
+				border: 1px solid gainsboro;
+				position: relative;
+			}
+
+			.imgs {
+				width: 100px;
+				height: 90px;
+				margin-left: 10px;
+				margin-top: 10px;
+			}
+
+			.div {
+				display: inline-block;
+				float: left;
+				/*width:220px;*/
+				height: 110px;
+				position: absolute;
+				top: 10px;
+				left: 100px;
+				/*background: pink;*/
+			}
+
+			.h5 {
+				display: inline-block;
+				font-size: 18px;
+				color: #404040;
+				margin-left: 10px;
+			}
+
+			.icon {
+				float: right;
+				vertical-align: top;
+				margin-right: 5px;
+				margin-top: 20px;
+			}
+
+			.p {
+				display: inline-block;
+				float: right;
+				line-height: 32px;
+				margin-right: 10px;
+				margin-top: 20px;
+			}
+
+			.float-btn {
+				border-radius: 22px;
+				width: 44px;
+				height: 44px;
+				position: fixed;
+				right: 20px;
+				bottom: 20px;
+				z-index: 1000;
+			}
+		</style>
+	</head>
+
+	<body style="background-color: gainsboro;">
+		<img class="float-btn" src="../icon/top.jpg" />
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div class="mui-slider" style="height: 250px;">
+					<div class="mui-slider-group mui-slider-loop">
+						<div class="mui-slider-item mui-slider-item-duplicate">ss
+							<a href=""><img class="img" src="" /></a>
+						</div>
+						<div class="mui-slider-item">
+							<a href=""><img class="img" src="" /></a>
+						</div>
+						<div class="mui-slider-item">
+							<a href=""><img class="img" src="" /></a>
+						</div>
+						<div class="mui-slider-item">
+							<a href=""><img class="img" src="" /></a>
+						</div>
+						<div class="mui-slider-item">
+							<a href=""><img class="img" src="" /></a>
+						</div>
+						<div class="mui-slider-item mui-slider-item-duplicate">
+							<a href=""><img class="img" src="" /></a>
+						</div>
+					</div>
+				</div>
+				<ul class="mui-table-view mui-table-view-chevron ul">
+					<!--<li class="tableView-cell">
+
+					<!--</li>-->
+				</ul>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+
+	<script type="text/javascript" charset="UTF-8">
+		var count = 0;
+
+		//获得slider插件对象
+		var gallery = mui('.mui-slider');
+		gallery.slider({
+			interval: 5000 //自动轮播周期，若为0则不自动播放，默认为0；
+		});
+
+		data();
+
+		mui.plusReady(function() {
+			mui.init({
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						//auto: true,
+						contentover: "释放立即刷新",
+						contentrefresh: '正在刷新...',
+						callback: data
+					},
+					up: {
+						//						height: 50,
+						auto: true,
+						contentrefresh: '正在向上加载...',
+						contentnomore: '没有更多数据了',
+						callback: data,
+						//
+					}
+				}
+			});
+
+		});
+
+		function data() {
+			setTimeout(function() {
+				var table = document.body.querySelector(".mui-table-view");
+				mui.plusReady(function() {
+					image();
+					function image() {
+						mui.ajax("http://c.m.163.com/nc/article/list/T1348648517839/0-10.html", {
+							dataType: 'json',
+							type: 'get',
+							success: function(data) {
+								var arr = data["T1348648517839"];
+//								console.log(arr);
+								var img = document.querySelectorAll(".img");
+									img[0].src = arr[3].imgsrc;
+									img[1].src = arr[0].imgsrc;
+									img[2].src = arr[1].imgsrc;
+									img[3].src = arr[2].imgsrc;
+									img[4].src = arr[3].imgsrc;
+									img[5].src = arr[0].imgsrc;
+
+								    img[0].url = arr[3].url;
+									img[1].url = arr[0].url;
+									img[2].url = arr[1].url;
+									img[3].url = arr[2].url;
+									img[4].url = arr[3].url;
+									img[5].url = arr[0].url;
+
+									img[0].title = arr[3].title;
+									img[1].title = arr[0].title;
+									img[2].title = arr[1].title;
+									img[3].title = arr[2].title;
+									img[4].title = arr[3].title;
+									img[5].title = arr[0].title;
+
+							}
+						});
+					}
+
+
+
+					mui.ajax("http://c.m.163.com/nc/article/list/T1348648517839/" + count + "-10.html", {
+						dataType: 'json',
+						type: 'get',
+						success: function(data) {
+							var arr = data["T1348648517839"];
+//							console.log(arr);
+
+							mui.each(arr, function(index, obj) {
+								var li = document.createElement("li");
+
+								li.url = obj.url;
+								li.title = obj.title;
+
+								var imgs = document.createElement("img");
+								var div = document.createElement("div");
+								var h5 = document.createElement("h5");
+								var p = document.createElement("p");
+								var span = document.createElement("span");
+								var icon = document.createElement("img");
+
+								imgs.src = obj.imgsrc;
+//								console.log(obj.imgsrc);
+								li.appendChild(imgs);
+								imgs.className = "imgs";
+
+								div.className = "div";
+								li.appendChild(div);
+
+								h5.innerHTML = obj.title;
+								div.appendChild(h5);
+								h5.className = "h5";
+
+								p.innerHTML = obj.votecount;
+								div.appendChild(p);
+								p.className = "p";
+
+								icon.src = "../icon/999.png";
+								div.appendChild(icon);
+								icon.className = "icon";
+
+								table.appendChild(li);
+							});
+							count += arr.length;
+						}
+					});
+				});
+				mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+				if(count >= 100) {
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+				} else {
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+				};
+			}, 1500);
+
+		};
+		//页面跳转
+		mui('.mui-content').on('tap', 'li', function() {
+			mui.openWindow({
+				url: "entertainment.html",
+				id: "entertainment",
+				show: {
+					aniShow: "slide-in-right"
+				},
+				extras: {
+					detailUrl: this.url,
+					detailTitle: this.title
+				},
+			});
+
+		});
+
+		mui('.mui-content').on('tap', '.img', function() {
+			mui.openWindow({
+				url: "subpage.html",
+				id: "entertainment",
+				show: {
+					aniShow: "slide-in-right"
+				},
+				extras: {
+					detailUrl: this.url,
+					detailTitle: this.title
+				},
+			});
+
+		});
+
+		var btn = document.body.querySelector(".float-btn");
+		btn.addEventListener('tap', function() {
+			mui('.mui-content').scroll().scrollTo(0, 0, 200); //200毫秒滚动到顶
+		});
+	</script>
+
+</html>

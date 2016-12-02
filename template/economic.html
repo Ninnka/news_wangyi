@@ -71,7 +71,7 @@
 		var absHeader = document.querySelector(".mui-card-header");
 		var absContent = document.querySelector(".mui-card-content");
 		var img = document.querySelector(".mui-card-content img");
-		var count = 0;
+		var count = 10;
 		var dataArr = [];
 		var eco_data = null;
 		mui.plusReady(function() {
@@ -143,7 +143,7 @@
 					absContent.title = data[0]['ads'][0]['title'];
 					img.src = data[0]['ads'][0]['imgsrc'];
 					mui.each(data, function(index, item) {
-						downGet(item);
+						downGet1(item);
 					});
 					var b = data.map(function(x){ return JSON.stringify(x)});
 					localStorage.setItem("eco_storage",b.join('+++'));
@@ -174,7 +174,7 @@
 		//跳转
 		function skip() {
 			mui.openWindow({
-				url: "eco1.html",
+				url: "subpage.html",
 				id: 'eco1',
 				show: {
 					aniShow: 'slide-in-right'

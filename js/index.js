@@ -7,7 +7,7 @@ var subPages = [
 	"template/furnishing.html",
 	"template/military.html",
 	"template/movie.html",
-	"template/entertamain.html",
+	"template/entertainment.html",
 	"template/home.html"
 ];
 var subPagesStyle = {

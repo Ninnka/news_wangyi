@@ -70,3 +70,43 @@ function downGet(item) {
 	}
 
 }
+
+function downGet1(item) {
+	for(var j = 0; j < ul.children.length; j++) {
+		if(item.imgsrc === ul.children[j].querySelector('img').src) {
+			item.j = false;
+			break;
+		}else{
+			item.j = true;
+		}
+	}
+	if(item.j) {
+		if(!item.live_info) {
+				var li = document.createElement('li');
+				var img = document.createElement('img');
+				var h5 = document.createElement('h5');
+				var p = document.createElement('p');
+				var h6 = document.createElement('h6');
+				//保存详情页网址
+				li.url = item.url_3w;
+				//保存详情页标题
+				li.title = item.title;
+				img.src = item.imgsrc;
+				h5.innerHTML = item.title;
+				p.innerHTML = item.digest;
+				h6.innerHTML = item.lmodify.slice(10) + "  跟帖 " + item.replyCount;
+				li.className = 'mui-table-view-cell mui-media skip';
+				img.className = 'mui-media mui-pull-left';
+				p.className = 'mui-ellipsis';
+				li.appendChild(img);
+				li.appendChild(h5);
+				li.appendChild(p);
+				li.appendChild(h6);
+				ul.insertBefore(li, ul.firstElementChild);
+		}
+	}else{
+//		console.log(0);
+		mui.toast("已经是最新的信息！");
+	}
+
+}

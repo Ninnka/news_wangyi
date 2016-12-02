@@ -31,38 +31,40 @@
 				border: 1px solid gainsboro;
 				position: relative;
 			}
-			/*.contain{
+		.contain{
     		display: inline-block;
     		float: left;
-    		height: 60px;
-    		margin-top: 0 !important;
-    		margin-left: 150px !important;
-    		background: red;
-    	}*/
+    		height: 110px;
+    		position: absolute;
+    		top: 10px;
+    		left: 92px;
+        /*padding-right: 2px;*/
+    		/*background: red;*/
+    	}
 
 			.h5 {
 				display: inline-block;
-				margin-top: 10px;
-				margin-left: 10px;
-				font-size: 13px;
+				margin-top: 0px;
+				/*margin-left: 10px;*/
+				font-size: 14px;
 				color: black;
-				/*font-weight: bolder;*/
+				font-weight: bolder;
 			}
 
 			.span {
 				display: inline-block;
-				font-size: 12px;
+				font-size: 11px;
 				line-height: 13px;
-				position: absolute;
-				left: 100px;
-				top: 30px;
 				color: grey;
 			}
 
 			.p {
+				display: inline-block;
 				position: absolute;
-				right: 10px;
-				bottom: 0px;
+				right: 0px;
+				top: 90px;
+				margin-right:5px;
+				font-size: 10px;
 				color: black;
 			}
 
@@ -97,14 +99,16 @@
 		</div>
 	</body>
 	<script src="../js/mui.min.js"></script>
+
 	<script type="text/javascript" charset="utf-8">
+	var count = 0;//每次加载的数据的数量
 		data();
 		mui.plusReady(function() {
 			mui.init({
 				pullRefresh: {
 					container: '#pullrefresh',
 					down: {
-						//					auto: true,
+						//auto: true,
 						contentover: "释放立即刷新",
 						contentrefresh: '正在刷新...',
 						callback: data
@@ -126,7 +130,7 @@
 			setTimeout(function() {
 				var table = document.body.querySelector('.mui-table-view');
 				mui.plusReady(function() {
-					mui.ajax("http://c.m.163.com/nc/article/list/T1348648650048/0-20.html", {
+					mui.ajax("http://c.m.163.com/nc/article/list/T1348648650048/"+count+"-20.html", {
 						dataType: 'json',
 						type: 'get',
 
@@ -151,34 +155,38 @@
 
 								//     	li.className = "mui-card";
 								imgs.src = obj.imgsrc;
-//								console.log(obj.imgsrc);
+								console.log(obj.imgsrc);
 								li.appendChild(imgs);
 								imgs.className = "imgs";
 
-								//      div.className = "contain";
-								//      li.appendChild(div);
+							    div.className = "contain";
+								li.appendChild(div);
 
 								h5.innerHTML = obj.title;
-								li.appendChild(h5);
+								div.appendChild(h5);
 								h5.className = "h5";
 
 								span.innerHTML = obj.digest + "...";
-								li.appendChild(span);
+								div.appendChild(span);
 								span.className = "span";
 
-								//      p.innerHTML = "评论："+obj.replyCount;
+								//p.innerHTML = "评论："+obj.replyCount;
 								p.innerHTML = obj.lmodify;
-								li.appendChild(p);
+								div.appendChild(p);
 								p.className = "p";
 
 								table.appendChild(li);
 							});
+							count += arr.length;//最新的数据数量=每次加载的数据数量+已有数据的数量
 						}
 					});
 				});
-				mui('#pullrefresh').pullRefresh().endPulldownToRefresh(true);
-
-				mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+				mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+              if(count>=100){
+              	mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+              }else{
+				mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+				};
 			}, 1500);
 
 		};

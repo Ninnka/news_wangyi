@@ -113,13 +113,16 @@ function getContactList() {
 			}
 
 			currentCountMount = currentCountMount + convertData.length;
-			moreFlag = currentCountMount >= 100 ? true : false;
+			moreFlag = currentCountMount >= 66 ? true : false;
 
 			// 强制结束，捕捉错误
 			try {
 				that.endPullupToRefresh(moreFlag);
 			} catch(error) {}
 			loadingFlag = false;
+		},
+		error: function() {
+			that.endPullupToRefresh(moreFlag);
 		}
 	})
 }
