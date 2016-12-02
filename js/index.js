@@ -1,9 +1,9 @@
 var subPages = [
-	"template/fitness.html",
 	"template/economic.html",
 	"template/car.html",
 	"template/science.html",
 	"template/sport.html",
+	"template/fitness.html",
 	"template/furnishing.html",
 	"template/military.html",
 	"template/movie.html",
