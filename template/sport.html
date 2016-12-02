@@ -40,6 +40,7 @@
 				height: 90px;
 				margin: 3% 1% 0;
 			}
+
 			.float-btn {
 				border-radius: 22px;
 				width: 44px;
@@ -53,7 +54,7 @@
 	</head>
 
 	<body>
-		<img src="../icon/top.jpg" alt="" class="float-btn"/>
+		<img src="../icon/top.jpg" alt="" class="float-btn" />
 		<div id="refreshContainer" class="mui-content mui-scroll-wrapper">
 			<div class="mui-scroll">
 				<div class="mui-card">
@@ -82,6 +83,162 @@
 		var absContent = document.querySelector(".mui-card-content");
 		var img = document.querySelector(".mui-card-content img");
 		var count = 0;
+		var dataArr = [];
+		mui.plusReady(function() {
+			var eco_data = localStorage.getItem("spo_storage");
+			//			console.log(eco_data);
+			if(eco_data) {
+				//				console.log(0);
+				eco_data = eco_data.split('+++');
+				for(var i = 0; i < eco_data.length; i++) {
+					dataArr.push(JSON.parse(eco_data[i]));
+				}
+				absHeader.innerHTML = dataArr[0]['ads'][0]['title'];
+				absContent.url = 'http://sports.163.com/photoview/' + dataArr[0]['ads'][0]['url'].replace('|', "/") + '.html';
+				absContent.title = dataArr[0]['ads'][0]['title'];
+				img.src = dataArr[0]['ads'][0]['imgsrc'];
+				mui.each(dataArr, function(index, item) {
+					//					upGet(item);
+					if(!item.live_info) {
+						if(!item.imgextra) {
+							var li = document.createElement('li');
+							var img = document.createElement('img');
+							var h5 = document.createElement('h5');
+							var p = document.createElement('p');
+							var h6 = document.createElement('h6');
+							//保存详情页网址
+							if(item.boardid === "dy_wemedia_bbs"){
+								li.url = 'http://dy.163.com/v2/article/detail/' + item.postid + '.html';
+							}else{
+								li.url = item.url_3w || item.url;
+							}
+
+							//保存详情页标题
+							li.title = item.title;
+							img.src = item.imgsrc;
+							h5.innerHTML = item.title;
+							p.innerHTML = item.digest;
+							li.className = 'mui-table-view-cell mui-media skip';
+							img.className = 'mui-media mui-pull-left';
+							p.className = 'mui-ellipsis';
+							h6.innerHTML = item.lmodify.slice(10) + "  跟帖 " + item.replyCount;
+							li.appendChild(img);
+							li.appendChild(h5);
+							li.appendChild(p);
+							li.appendChild(h6);
+							ul.appendChild(li);
+						} else {
+							var li = document.createElement('li');
+							var img1 = document.createElement('img');
+							var img2 = document.createElement('img');
+							var img3 = document.createElement('img');
+							var h4 = document.createElement('h4');
+							var imgs = document.createElement('h4');
+							//保存详情页网址
+							if(item.url_3w || item.skipID) {
+								li.url = item.url_3w || ('http://sports.163.com/photoview/' + item.skipID.replace('|', "/") + '.html');
+							} else {
+								li.url = 'http://dy.163.com/v2/article/detail/' + item.postid + '.html';
+							}
+							//保存详情页标题
+							li.title = item.title;
+							img1.src = item.imgsrc;
+							img2.src = item.imgextra[0]['imgsrc'];
+							img3.src = item.imgextra[1]['imgsrc'];
+							h4.innerHTML = item.title;
+							li.className = 'mui-table-view-cell mui-media';
+							img1.className = 'img3';
+							img2.className = 'img3';
+							img3.className = 'img3';
+							li.appendChild(h4);
+							imgs.appendChild(img1);
+							imgs.appendChild(img2);
+							imgs.appendChild(img3);
+							li.appendChild(imgs);
+							ul.appendChild(li);
+						}
+					}
+				});
+			} else {
+				mui.ajax('http://c.m.163.com/nc/article/list/T1348649079062/' + count + '-10.html', {
+					dataType: 'json',
+					type: 'get',
+					success: function(data) {
+						var data = data["T1348649079062"];
+						absHeader.innerHTML = data[0]['ads'][0]['title'];
+						absContent.url = 'http://sports.163.com/photoview/' + data[0]['ads'][0]['url'].replace('|', "/") + '.html';
+						absContent.title = data[0]['ads'][0]['title'];
+						img.src = data[0]['ads'][0]['imgsrc'];
+						mui.each(data, function(index, item) {
+							//						upGet(item);
+							if(!item.live_info) {
+								if(!item.imgextra) {
+									var li = document.createElement('li');
+									var img = document.createElement('img');
+									var h5 = document.createElement('h5');
+									var p = document.createElement('p');
+									var h6 = document.createElement('h6');
+									//保存详情页网址
+									if(item.boardid === "dy_wemedia_bbs"){
+								li.url = 'http://dy.163.com/v2/article/detail/' + item.postid + '.html';
+							}else{
+								li.url = item.url_3w || item.url;
+							}
+									//保存详情页标题
+									li.title = item.title;
+									img.src = item.imgsrc;
+									h5.innerHTML = item.title;
+									p.innerHTML = item.digest;
+									li.className = 'mui-table-view-cell mui-media skip';
+									img.className = 'mui-media mui-pull-left';
+									p.className = 'mui-ellipsis';
+									h6.innerHTML = item.lmodify.slice(10) + "  跟帖 " + item.replyCount;
+									li.appendChild(img);
+									li.appendChild(h5);
+									li.appendChild(p);
+									li.appendChild(h6);
+									ul.appendChild(li);
+								} else {
+									var li = document.createElement('li');
+									var img1 = document.createElement('img');
+									var img2 = document.createElement('img');
+									var img3 = document.createElement('img');
+									var h4 = document.createElement('h4');
+									var imgs = document.createElement('h4');
+									//保存详情页网址
+									if(item.url_3w || item.skipID) {
+										li.url = item.url_3w || ('http://sports.163.com/photoview/' + item.skipID.replace('|', "/") + '.html');
+									} else {
+										li.url = 'http://dy.163.com/v2/article/detail/' + item.postid + '.html';
+									}
+									//保存详情页标题
+									li.title = item.title;
+									img1.src = item.imgsrc;
+									img2.src = item.imgextra[0]['imgsrc'];
+									img3.src = item.imgextra[1]['imgsrc'];
+									h4.innerHTML = item.title;
+									li.className = 'mui-table-view-cell mui-media';
+									img1.className = 'img3';
+									img2.className = 'img3';
+									img3.className = 'img3';
+									li.appendChild(h4);
+									imgs.appendChild(img1);
+									imgs.appendChild(img2);
+									imgs.appendChild(img3);
+									li.appendChild(imgs);
+									ul.appendChild(li);
+								}
+							}
+						});
+						count += 10;
+						var b = data.map(function(x) {
+							return JSON.stringify(x)
+						});
+						localStorage.setItem("spo_storage", b.join('+++'));
+					}
+				});
+			}
+		});
 		mui.init({
 			pullRefresh: {
 				container: "#refreshContainer", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
@@ -95,7 +252,7 @@
 				},
 				up: {
 					height: 50, //可选.默认50.触发上拉加载拖动距离
-					auto: true, //可选,默认false.自动上拉加载一次
+					auto: false, //可选,默认false.自动上拉加载一次
 					contentrefresh: "正在加载...", //可选，正在加载状态时，上拉加载控件上显示的标题内容
 					contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
 					callback: upFresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
@@ -110,12 +267,16 @@
 				success: function(data) {
 					var data = data["T1348649079062"];
 					absHeader.innerHTML = data[0]['ads'][0]['title'];
-					absContent.url = 'http://sports.163.com/photoview/'+data[0]['ads'][0]['url'].replace('|',"/")+'.html';
+					absContent.url = 'http://sports.163.com/photoview/' + data[0]['ads'][0]['url'].replace('|', "/") + '.html';
 					absContent.title = data[0]['ads'][0]['title'];
 					img.src = data[0]['ads'][0]['imgsrc'];
 					mui.each(data, function(index, item) {
 						downGet(item);
 					});
+					var b = data.map(function(x) {
+						return JSON.stringify(x)
+					});
+					localStorage.setItem("spo_storage", b.join('+++'));
 					mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
 				}
 			});
@@ -129,21 +290,24 @@
 				success: function(data) {
 					var data = data["T1348649079062"];
 					absHeader.innerHTML = data[0]['ads'][0]['title'];
-					absContent.url = 'http://sports.163.com/photoview/'+data[0]['ads'][0]['url'].replace('|',"/")+'.html';
+					absContent.url = 'http://sports.163.com/photoview/' + data[0]['ads'][0]['url'].replace('|', "/") + '.html';
 					absContent.title = data[0]['ads'][0]['title'];
 					img.src = data[0]['ads'][0]['imgsrc'];
 					mui.each(data, function(index, item) {
 						upGet(item);
 					});
 					count += 10;
+
 					that.endPullupToRefresh(false);
+					//					var b = data.map(function(x){ return JSON.stringify(x)});
+					//					localStorage.setItem("spo_storage",b.join('+++'));
 				}
 			});
 		}
 		//跳转
-		function skip(){
+		function skip() {
 			mui.openWindow({
-				url: "subpage.html",
+				url: "sport1.html",
 				id: 'sport1',
 				show: {
 					aniShow: 'slide-in-right'
@@ -154,8 +318,8 @@
 				}
 			})
 		}
-		mui('.mui-content').on('tap','li',skip);
-		mui('.mui-content').on('tap','.mui-card-content',skip);
+		mui('.mui-content').on('tap', 'li', skip);
+		mui('.mui-content').on('tap', '.mui-card-content', skip);
 	</script>
 
 </html>

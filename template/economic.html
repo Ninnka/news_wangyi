@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
@@ -8,23 +9,27 @@
 		<link rel="stylesheet" href="../css/mui.min.css">
 		<title></title>
 		<style type="text/css">
-			.mui-table-view-cell .mui-media{
+			.mui-table-view-cell .mui-media {
 				width: 110px;
 				height: 90px;
-				margin-right: 10px ;
+				margin-right: 10px;
 			}
-			.mui-table-view-cell h5{
+
+			.mui-table-view-cell h5 {
 				width: 117%;
 				color: black;
 			}
+
 			.mui-table-view-cell h6 {
 				width: 115%;
 				margin: 20px 0 0 0;
 				text-align: right;
 			}
-			.mui-card-content img{
+
+			.mui-card-content img {
 				width: 100%;
 			}
+
 			.float-btn {
 				border-radius: 22px;
 				width: 44px;
@@ -36,8 +41,9 @@
 			}
 		</style>
 	</head>
+
 	<body>
-		<img src="../icon/top.jpg" alt="" class="float-btn"/>
+		<img src="../icon/top.jpg" alt="" class="float-btn" />
 		<div id="refreshContainer" class="mui-content mui-scroll-wrapper">
 			<div class="mui-scroll">
 				<div class="mui-card">
@@ -50,19 +56,13 @@
 				</div>
 				<!--数据列表-->
 				<ul class="mui-table-view mui-table-view-chevron mui-content">
-					<!--<li class="mui-table-view-cell mui-media">
-						<img src="http://cms-bucket.nosdn.127.net/17ffac1f9c7141b6b44929749a6721b220161130075154.jpeg" class="mui-media mui-pull-left"/>
-						<h4>抛盘！上海加速去杠杆 李嘉诚抛售大虹桥板块</h4>
-						<p class="mui-ellipsis">王健林对话福布斯11月29日，十六届福布斯全球CEO会议在印尼雅加达举行，万达集团董事长王健林获得马尔科姆&bull;福布斯终身成就奖。会议中福布斯与王健林围绕</p>
-						<h6>4564654646</h6>
-					</li>-->
+
 				</ul>
 			</div>
 		</div>
 	</body>
 	<script src="../js/re_top.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
-	<!--<script src="js/init.js" type="text/javascript" charset="utf-8"></script>-->
 	<script src="../js/downGetAjax.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../js/eco_UGA.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript">
@@ -72,6 +72,45 @@
 		var absContent = document.querySelector(".mui-card-content");
 		var img = document.querySelector(".mui-card-content img");
 		var count = 0;
+		var dataArr = [];
+		var eco_data = null;
+		mui.plusReady(function() {
+			var eco_data = localStorage.getItem("eco_storage");
+//			console.log(eco_data);
+			if(eco_data) {
+				eco_data = eco_data.split('+++');
+				for(var i = 0;i < eco_data.length;i++){
+					dataArr.push(JSON.parse(eco_data[i]));
+				}
+				absHeader.innerHTML = dataArr[0]['ads'][0]['title'];
+				absContent.url = 'http://money.163.com/16/1123/07/' + dataArr[0]['ads'][0]['url'] + '.html';
+				absContent.title = dataArr[0]['ads'][0]['title'];
+				img.src = dataArr[0]['ads'][0]['imgsrc'];
+				mui.each(dataArr, function(index, item) {
+					upGet1(item);
+				});
+			}
+			else {
+				mui.ajax('http://c.m.163.com/nc/article/list/T1348648756099/' + count + '-10.html', {
+				dataType: 'json',
+				type: 'get',
+				success: function(data) {
+					var data = data["T1348648756099"];
+					absHeader.innerHTML = data[0]['ads'][0]['title'];
+					absContent.url = 'http://money.163.com/16/1123/07/' + data[0]['ads'][0]['url'] + '.html';
+					absContent.title = data[0]['ads'][0]['title'];
+					img.src = data[0]['ads'][0]['imgsrc'];
+					mui.each(data, function(index, item) {
+						upGet1(item);
+					});
+					count += 10;
+					var b = data.map(function(x){ return JSON.stringify(x)});
+					localStorage.setItem("eco_storage",b.join('+++'));
+				}
+			});
+			}
+		});
+
 		mui.init({
 			pullRefresh: {
 				container: "#refreshContainer", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
@@ -85,7 +124,7 @@
 				},
 				up: {
 					height: 50, //可选.默认50.触发上拉加载拖动距离
-					auto: true, //可选,默认false.自动上拉加载一次
+					auto: false, //可选,默认false.自动上拉加载一次
 					contentrefresh: "正在加载...", //可选，正在加载状态时，上拉加载控件上显示的标题内容
 					contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
 					callback: upFresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
@@ -93,36 +132,38 @@
 			}
 		});
 		//下拉刷新
-		function downFresh(){
-			mui.ajax('http://c.m.163.com/nc/article/list/T1348648756099/0-10.html',{
-				dataType:'json',
+		function downFresh() {
+			mui.ajax('http://c.m.163.com/nc/article/list/T1348648756099/0-10.html', {
+				dataType: 'json',
 				type: 'get',
-				success:function(data){
+				success: function(data) {
 					var data = data["T1348648756099"];
 					absHeader.innerHTML = data[0]['ads'][0]['title'];
-					absContent.url = 'http://sports.163.com/photoview/'+data[0]['ads'][0]['url'].replace('|',"/")+'.html';
+					absContent.url = 'http://sports.163.com/photoview/' + data[0]['ads'][0]['url'].replace('|', "/") + '.html';
 					absContent.title = data[0]['ads'][0]['title'];
 					img.src = data[0]['ads'][0]['imgsrc'];
-					mui.each(data,function(index,item){
+					mui.each(data, function(index, item) {
 						downGet(item);
 					});
+					var b = data.map(function(x){ return JSON.stringify(x)});
+					localStorage.setItem("eco_storage",b.join('+++'));
 					mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
 				}
 			});
 		}
 		//上拉加载
-		function upFresh(){
+		function upFresh() {
 			var that = this;
-			mui.ajax('http://c.m.163.com/nc/article/list/T1348648756099/'+count+'-10.html',{
-				dataType:'json',
+			mui.ajax('http://c.m.163.com/nc/article/list/T1348648756099/' + count + '-10.html', {
+				dataType: 'json',
 				type: 'get',
-				success:function(data){
+				success: function(data) {
 					var data = data["T1348648756099"];
 					absHeader.innerHTML = data[0]['ads'][0]['title'];
-					absContent.url = 'http://money.163.com/16/1123/07/'+data[0]['ads'][0]['url']+'.html';
+					absContent.url = 'http://money.163.com/16/1123/07/' + data[0]['ads'][0]['url'] + '.html';
 					absContent.title = data[0]['ads'][0]['title'];
 					img.src = data[0]['ads'][0]['imgsrc'];
-					mui.each(data,function(index,item){
+					mui.each(data, function(index, item) {
 						upGet(item);
 					});
 					count += 10;
@@ -131,10 +172,10 @@
 			});
 		}
 		//跳转
-		function skip(){
+		function skip() {
 			mui.openWindow({
-				url: "subpage.html",
-				id: 'sport1',
+				url: "eco1.html",
+				id: 'eco1',
 				show: {
 					aniShow: 'slide-in-right'
 				},
@@ -144,7 +185,8 @@
 				}
 			})
 		}
-		mui('.mui-content').on('tap','li',skip);
-		mui('.mui-content').on('tap','.mui-card-content',skip);
+		mui('.mui-content').on('tap', 'li', skip);
+		mui('.mui-content').on('tap', '.mui-card-content', skip);
 	</script>
+
 </html>

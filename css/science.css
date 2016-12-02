@@ -4,16 +4,16 @@
 }
 
 .list {
-	margin: 0px auto;
+	margin: 15px auto;
 	width: 100%;
 }
 
 .list-item {
-	margin-bottom: 15px;
+	margin-bottom: 10px;
 	width: 100%;
 	list-style: none;
 	font-size: 12px;
-	box-shadow: 0 0 10px 0 #000;
+	box-shadow: 0 0 10px 0 #909090;
 }
 
 .list-item>img {

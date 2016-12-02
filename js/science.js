@@ -5,7 +5,7 @@ mui.init({
 	pullRefresh: {
 		container: "#refreshContainer",
 		down: {
-			height: 50,
+			height: 30,
 			auto: false,
 			contentdown: "下拉可以刷新",
 			contentover: "释放立即刷新",
@@ -13,7 +13,7 @@ mui.init({
 			callback: downfresh
 		},
 		up: {
-			height: 50,
+			height: 30,
 			auto: false,
 			contentrefresh: "正在加载...",
 			contentnomore: '没有更多数据了',
@@ -39,7 +39,7 @@ mui.plusReady(function() {
 	}, false);
 
 	var localData = localStorage.getItem('scienceData');
-//	console.log(localStorage.getItem('scienceId'));
+	console.log(localStorage.getItem('scienceId'));
 	if(localData) {
 		localData = localData.split('+');
 		localData.reverse();
@@ -70,13 +70,13 @@ function upfresh() {
 				if(requestedIds.indexOf(arrobj[i].docid) === -1){
 					requestedIds.push(arrobj[i].docid);
 					if(eid) {
-//						console.log(eid.indexOf(arrobj[i].docid));
+						console.log(eid.indexOf(arrobj[i].docid));
 						if(eid.indexOf(arrobj[i].docid) === -1) {
 							addItem(arrobj[i], ul,false);
 						}
 					} else {
 						addItem(arrobj[i], ul,false);
-
+						
 					}
 				}
 			}
@@ -125,7 +125,7 @@ function getData(startIndex, isDownfresh) {
 //							}
 							addItem(arrobj[i], ul,true);
 						}
-					} else {
+					} else {	
 						exitId += arrobj[i].docid;
 						localStr += JSON.stringify(tempObj);
 						if(i !== arrobj.length - 1) {
@@ -137,7 +137,7 @@ function getData(startIndex, isDownfresh) {
 				}
 			}
 			if(localStr !== '' && exitId !== ''){
-				localStorage.setItem('scienceData', localStr);
+				localStorage.setItem('scienceData', localStr);  
 				localStorage.setItem('scienceId', exitId);
 			}else{
 				mui.toast('这已经是最新的信息了！');
@@ -159,6 +159,6 @@ function addItem(obj, parentObj,isinsetbefore) {
 	if(isinsetbefore) {
 		parentObj.insertBefore(li, parentObj.firstChild);
 	} else {
-		parentObj.appendChild(li);
+		parentObj.appendChild(li); 
 	}
 }

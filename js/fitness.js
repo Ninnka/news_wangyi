@@ -178,7 +178,7 @@ function updateContactList() {
 function mountStorage(data) {
 	if(!data) {
 		console.log("no local");
-		//		getContactList();
+		getContactList();
 	} else {
 		console.log("local");
 		var dataArr = data.split("+");

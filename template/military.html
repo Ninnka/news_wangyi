@@ -1,10 +1,345 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
-		<meta charset="UTF-8">
-		<title></title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		
+			.ul {
+				width: 100%;
+				margin-top: 0 !important;
+				/*background: gainsboro !important;*/
+				padding-bottom: 10px !important;
+			}
+			
+			.photoli {
+				display: block;
+				width: 96%;
+				padding: 2%;
+				position: relative;
+				border-bottom: 1px solid gainsboro;
+				margin: 0 auto;
+				
+			}
+			
+			.photo_img {
+				width: 100%;
+			}
+			
+			.photo_h5 {
+				width: 96%;
+				color: black;
+				font-size: 15px;
+				line-height: 18px;
+				position: absolute;
+				bottom: 0;
+				color: white;
+				background: rgba(0, 0, 0, 0.59);
+				padding-left: 10px;
+			}
+			.photo_imgs{
+				width: 33.3%;
+			    padding: 1%;
+				height: 65px;
+			}
+			.photo_h5s{
+				text-align: center;
+				color: black;
+				line-height: 15px;
+			}
+			.news_li{
+				width: 96%;
+				/*background: green;*/
+				/*height: 200px;*/
+				border-bottom: 1px solid gainsboro;
+				padding: 2%;
+				margin: 0 auto;
+			}
+			
+			.news_div{
+				width: 80%;
+				display: inline-block;
+				vertical-align: top;
+				color: black;
+			}
+			.news_h5{
+				padding-right: 5px;
+				color: black;
+				font-size: 13px;
+				line-height: 16px;
+			}
+			.news_img{
+				width: 20%;
+				height: 55px;
+				vertical-align: top;
+			}
+			.float-btn {
+				border-radius: 22px;
+				width: 44px;
+				height: 44px;
+				position: fixed;
+				right: 20px;
+				bottom: 20px;
+				z-index: 1000;
+			}
+			.icon{
+				width: 20px;
+				float: left;
+			}
+			.time{
+				color: gray;
+				float: left;
+				margin-left: 5px;
+				font-size: 12px;
+			}
+			.from{
+				color: dodgerblue;
+				float: right;
+				font-size: 8px;
+				margin-right: 25px;
+			}
+		</style>
+
 	</head>
+
 	<body>
-		military
+		<div id="refresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<!--数据列表-->
+				<ul class="mui-table-view ul mui-table-view-chevron" style="background-color: white;">
+
+				</ul>
+			</div>
+		</div>
+		<img src="../img/btn.jpg" class="float-btn" />
+		<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init({
+				pullRefresh: {
+					container: "#refresh",
+					up: {
+						height: 50,
+						auto: false,
+						contentrefresh: "正在加载...",
+						contentnomore: '别拉了，没了',
+						callback: pullupfresh
+					},
+					down: {
+						height: 50,
+						auto: false,
+						contentdown: "下拉可以刷新",
+						contentover: "再不放开我报警了",
+						contentrefresh: "正在刷新...",
+						callback: pulldownfresh
+					}
+				}
+			});
+			pullupfresh();
+			var j = 0; //上拉加载总数
+			//下拉刷新函数
+			function pulldownfresh() {
+				var lis = document.getElementsByTagName("li");
+				var lisid = [];
+				for(var i = 0; i > 10; i++) {
+					lisid[i] = lis[i].id;
+				}
+				console.log(lisid);
+				mui.plusReady(function() {
+					var ul = document.body.querySelector('.mui-table-view');
+					mui.ajax('http://c.m.163.com/nc/article/list/T1348648141035/0-10.html', {
+						dataType: 'json',
+						type: 'get',
+						success: function(data) {
+							var lis = document.getElementsByTagName("li");
+							var obj = data["T1348648141035"];
+							for(var i = 9; i >= 0; i--) {
+								var li = document.createElement('li');
+								var div = document.createElement("div");
+								var img = document.createElement("img");
+								var img1 = document.createElement("img");
+								var img2 = document.createElement("img");
+								var h5 = document.createElement("h5");
+								var times = document.createElement("div");
+								var from = document.createElement("div");
+								var icon = document.createElement("img");
+								icon.src = "../icon/icon.jpg";
+								li.id = obj[i].docid;
+								console.log(li.id);
+								console.log("下拉");
+								li.imgextra = obj[i].imgextra;
+								console.log(li.imgextra);
+								li.url = obj[i].url; /*详情url*/
+								li.title = obj[i].title; /*详情标题*/
+								li.type = obj[i].boardid;
+								img.src = obj[i].imgsrc;
+								h5.innerHTML = obj[i].title;
+								times.innerHTML = obj[i].replyCount;
+								from.innerHTML = "来源:"+obj.source;
+								if(li.type == "photoview_bbs"){
+									if(li.imgextra == null){
+										img.className = "photo_img";
+										li.appendChild(img);
+										h5.className = "photo_h5";
+										li.appendChild(h5);
+									}
+									else{
+										h5.className = "photo_h5s";
+										li.appendChild(h5);
+										img.className = "photo_imgs";
+										img1.className = "photo_imgs";
+										img2.className = "photo_imgs";
+										img1.src = li.imgextra[0].imgsrc;
+										img2.src = li.imgextra[1].imgsrc;
+										li.appendChild(img);
+										li.appendChild(img1);
+										li.appendChild(img2);
+										
+									}
+									li.className = "photoli";
+									
+								}
+								else{
+									li.className = "news_li";
+									img.className = "news_img";
+									h5.className = "news_h5";
+									div.className = "news_div";
+									icon.className = "icon";
+									div.appendChild(h5);
+									div.appendChild(icon);
+									div.appendChild(times);
+									div.appendChild(from);
+									li.appendChild(div);
+									li.appendChild(img);
+								}
+								if(obj[i].id == lisid[i]) {
+									console.log("没有新的数据");
+								} else {
+									console.log("有新的数据");
+									ul.insertBefore(li, ul.firstChild);
+								}
+								
+							}
+						}
+					});
+				});
+				mui('#refresh').pullRefresh().endPulldownToRefresh();
+			}
+			/////上拉加载函数/////
+			function pullupfresh() {
+				var that = this;
+				var ul = document.body.querySelector('.mui-table-view');
+				mui.plusReady(function() {
+					mui.ajax('http://c.m.163.com/nc/article/list/T1348648141035/' + j + '-10.html', {
+						dataType: 'json',
+						type: 'get',
+						success: function(data) {
+							var obj = data["T1348648141035"];
+							console.log(obj.length);
+							for(var i = 0; i < 10; i++) {
+								var li = document.createElement('li');
+								var div = document.createElement("div");
+								var img = document.createElement("img");
+								var img1 = document.createElement("img");
+								var img2 = document.createElement("img");
+								var h5 = document.createElement("h5");
+								var times = document.createElement("div");
+								var from = document.createElement("div");
+								var icon = document.createElement("img");
+								icon.src = "../icon/icon.jpg";
+								li.id = obj[i].docid;
+								console.log(li.id);
+								console.log("上拉");
+								li.imgextra = obj[i].imgextra;
+								console.log(li.imgextra);
+								li.url = obj[i].url; /*详情url*/
+								li.title = obj[i].title; /*详情标题*/
+								li.type = obj[i].boardid;
+								img.src = obj[i].imgsrc;
+								h5.innerHTML = obj[i].title;
+								times.innerHTML = obj[i].votecount
+								from.innerHTML = "来源:"+obj[i ].source;
+								if(li.type == "photoview_bbs"){
+									if(li.imgextra == null){
+										img.className = "photo_img";
+										li.appendChild(img);
+										h5.className = "photo_h5";
+										li.appendChild(h5);
+									}
+									else{
+										h5.className = "photo_h5s";
+										li.appendChild(h5);
+										img.className = "photo_imgs";
+										img1.className = "photo_imgs";
+										img2.className = "photo_imgs";
+										img1.src = li.imgextra[0].imgsrc;
+										img2.src = li.imgextra[1].imgsrc;
+										li.appendChild(img);
+										li.appendChild(img1);
+										li.appendChild(img2);
+										
+									}
+									li.className = "photoli";
+									
+								}
+								else{
+									li.className = "news_li";
+									img.className = "news_img";
+									h5.className = "news_h5";
+									div.className = "news_div";
+									icon.className = "icon";
+									times.className = "time";
+									from.className = "from";
+									div.appendChild(h5);
+									div.appendChild(icon);
+									div.appendChild(times);
+									div.appendChild(from);
+									li.appendChild(div);
+									li.appendChild(img);
+								}
+								
+								++j;
+								ul.appendChild(li);
+							}
+						}
+					});
+					if(j >= 100) {
+						that.endPullupToRefresh(true);
+					} else {
+						that.endPullupToRefresh(false);
+					}
+				});
+
+			}
+			//////////////////回到顶部//////////////////
+			mui('.mui-content').on('tap', 'li', function() {
+				mui.openWindow({
+					url: "subpage.html",
+					id: "military_detail",
+					show: {
+						aniShow: 'slide-in-right'
+					},
+					extras: {
+						detailUrl: this.url,
+						detailTitle: this.title
+					},
+				});
+			});
+			/////监听点击事件/////
+			var btn = document.querySelector(".float-btn");
+			btn.addEventListener("tap", function() {
+				//内容区滚动到顶部
+				mui('#refresh').pullRefresh().scrollTo(0,0,1000);
+			});
+		</script>
+
 	</body>
+
 </html>

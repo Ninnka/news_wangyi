@@ -1,14 +1,17 @@
 function downGet(item) {
+//	console.log(ul.children.length);
 	for(var j = 0; j < ul.children.length; j++) {
+//		console.log(item.imgsrc , ul.children[j].querySelector('img').src);
 		if(item.imgsrc === ul.children[j].querySelector('img').src) {
 			item.j = false;
-//			return;
+			break;
 		}else{
 			item.j = true;
 		}
 	}
-
-	if(!item.j) {
+//	console.log(item.j);
+	if(item.j) {
+//		console.log(1);
 		if(!item.live_info) {
 			if(!item.imgextra) {
 				var li = document.createElement('li');
@@ -62,6 +65,7 @@ function downGet(item) {
 			}
 		}
 	}else{
+//		console.log(0);
 		mui.toast("已经是最新的信息！");
 	}
 

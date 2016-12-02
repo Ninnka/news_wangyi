@@ -5,7 +5,7 @@ mui.init({
 	pullRefresh: {
 		container: "#refreshContainer",
 		down: {
-			height: 50,
+			height: 30,
 			auto: false,
 			contentdown: "下拉可以刷新",
 			contentover: "释放立即刷新",
@@ -70,7 +70,7 @@ mui.plusReady(function() {
 		});
 	});
 	var localData = localStorage.getItem('carData');
-//	console.log(localStorage.getItem('carData'));
+	console.log(localStorage.getItem('carData'));
 	if(localData) {
 		localData = localData.split('+');
 		localData.reverse();
@@ -82,9 +82,9 @@ mui.plusReady(function() {
 			addItem(tempDataObj, ul,false);
 		}
 	}
-	else{
-		getData(0, false);
-	}
+//	else{
+//		getData(0, false);
+//	} 
 });
 //上拉加载
 function upfresh() {
@@ -102,13 +102,13 @@ function upfresh() {
 				if(requestedIds.indexOf(arrobj[i].docid) === -1){
 					requestedIds.push(arrobj[i].docid);
 					if(eid) {
-//						console.log(eid.indexOf(arrobj[i].docid));
+						console.log(eid.indexOf(arrobj[i].docid));
 						if(eid.indexOf(arrobj[i].docid) === -1) {
 							addItem(arrobj[i], ul,false);
 						}
 					} else {
 						addItem(arrobj[i], ul,false);
-
+						
 					}
 				}
 			}
@@ -157,19 +157,19 @@ function getData(startIndex, isDownfresh) {
 //							}
 							addItem(arrobj[i], ul,true);
 						}
-					} else {
+					} else {	
 						exitId += arrobj[i].docid;
 						localStr += JSON.stringify(tempObj);
 						if(i !== arrobj.length - 1) {
 							localStr += '+';
 							exitId += '+';
 						}
-						addItem(arrobj[i], ul,true);
+						addItem(arrobj[i], ul,true); 
 					}
 				}
-			}
+			} 
 			if(localStr !== '' && exitId !== ''){
-				localStorage.setItem('carData', localStr);
+				localStorage.setItem('carData', localStr);  
 				localStorage.setItem('carId', exitId);
 			}else{
 				mui.toast('这已经是最新的信息了！');
